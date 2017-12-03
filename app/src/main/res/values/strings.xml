@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">DIYCodeImitation</string>
+
+    <string name="drawer_open">打开</string>
+    <string name="drawer_close">关闭</string>
+
+    <string name="navigation_my_article">我的帖子</string>
+    <string name="nav_my_collect">我的收藏</string>
+    <string name="nav_about_us">关于我们</string>
+    <string name="nav_soft_setting">软件设置</string>
+
+    <string name="app_main_name">DiyCode</string>
+
+    <string name="tab_topics">Topics</string>
+    <string name="tab_news">News</string>
+    <string name="tab_sites">Sites</string>
+
 </resources>
