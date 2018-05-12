@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.bornlotus.diycodeimitation.R;
-import com.bornlotus.diycodeimitation.activity.api.http.HttpServiceManager;
 import com.bornlotus.diycodeimitation.activity.fragment.NewsFragment;
 import com.bornlotus.diycodeimitation.activity.fragment.SitesFragment;
 import com.bornlotus.diycodeimitation.activity.fragment.TopicsFragment;
@@ -116,6 +115,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
     @Override
     public void onRefresh() {
-        HttpServiceManager.newInstance().getTopicList("",0,0,0,null);
+        //HttpServiceManager.newInstance().getTopicList("",0,0,0,null);
     }
 }

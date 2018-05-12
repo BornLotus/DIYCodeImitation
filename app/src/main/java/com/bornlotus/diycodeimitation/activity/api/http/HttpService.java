@@ -1,8 +1,13 @@
 package com.bornlotus.diycodeimitation.activity.api.http;
 
+import com.bornlotus.diycodeimitation.activity.api.module.topic.State;
+import com.bornlotus.diycodeimitation.activity.api.module.topic.Topic;
+import com.bornlotus.diycodeimitation.activity.api.module.topic.TopicContent;
+import com.bornlotus.diycodeimitation.activity.api.module.topic.TopicReply;
 import com.bornlotus.diycodeimitation.activity.api.utils.Constant;
 
 import java.io.File;
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.DELETE;
@@ -31,8 +36,8 @@ public interface HttpService {
      * @return topic 列表
      */
     @GET("topics.json")
-    <T> Observable<T>  getTopicList(@Query("type") String type, @Query("node_id") Integer node_id,
-                               @Query("offset") Integer offset, @Query("limit") Integer limit);
+    Observable<List<Topic>>  getTopicList(@Query("type") String type, @Query("node_id") Integer node_id,
+                                          @Query("offset") Integer offset, @Query("limit") Integer limit);
 
 
     /**
@@ -45,8 +50,8 @@ public interface HttpService {
      */
     @POST("topics.json")
     @FormUrlEncoded
-    <T> Observable<T> createTopic(@Field("title") String title, @Field("body") String body,
-                                  @Field("node_id") Integer node_id);
+    Observable<TopicContent> createTopic(@Field("title") String title, @Field("body") String body,
+                                         @Field("node_id") Integer node_id);
 
     /**
      * 获取 topic 内容
@@ -55,7 +60,7 @@ public interface HttpService {
      * @return 内容详情
      */
     @GET("topics/{id}.json")
-    <T> Observable<T> getTopic(@Path("id") int id);
+    Observable<TopicContent> getTopic(@Path("id") int id);
 
 
     /**
@@ -69,7 +74,7 @@ public interface HttpService {
      */
     @POST("topics/{id}.json")
     @FormUrlEncoded
-    <T> Observable<T> updateTopic(@Path("id") int id, @Field("title") String title,
+    Observable<TopicContent> updateTopic(@Path("id") int id, @Field("title") String title,
                                   @Field("body") String body, @Field("node_id") Integer node_id);
 
 
@@ -80,7 +85,7 @@ public interface HttpService {
      * @return 状态
      */
     @DELETE("topics/{id}.json")
-    <T> Observable<T> deleteTopic(@Path("id") int id);
+    Observable<State> deleteTopic(@Path("id") int id);
 
 
     /**
@@ -91,7 +96,7 @@ public interface HttpService {
      */
     @POST("topics/{id}/favorite.json")
     @FormUrlEncoded
-    <T> Observable<T> collectionTopic(@Path("id") int id);
+    Observable<State> collectTopic(@Path("id") int id);
 
 
     /**
@@ -102,28 +107,26 @@ public interface HttpService {
      */
     @POST("topics/{id}/unfavorite.json")
     @FormUrlEncoded
-    <T> Observable<T> unCollectionTopic(@Path("id") int id);
+    Observable<State> unCollectTopic(@Path("id") int id);
 
 
     /**
      * 关注话题
      * @param id
-     * @param <T>
      * @return
      */
     @POST("topics/{id}/follow.json")
     @FormUrlEncoded
-    <T> Observable<T> watchTopic(@Path("id") int id);
+    Observable<State> watchTopic(@Path("id") int id);
 
     /**
      * 取消关注话题
      * @param id
-     * @param <T>
      * @return
      */
     @POST("topics/{id}/unfollow.json")
     @FormUrlEncoded
-    <T> Observable<T> unWatchTopic(@Path("id") int id);
+    Observable<State> unWatchTopic(@Path("id") int id);
 
 
     /**
@@ -131,12 +134,11 @@ public interface HttpService {
      * @param id
      * @param offset
      * @param limit
-     * @param <T>
      * @return
      */
     @GET("topics/{id}/replies.json")
-    <T> Observable<T> getTopicRepliesList(@Path("id") int id, @Query("offset") Integer offset,
-                                          @Query("limit") Integer limit);
+    Observable<List<TopicReply>> getTopicRepliesList(@Path("id") int id, @Query("offset") Integer offset,
+                                                   @Query("limit") Integer limit);
 
 
     /**
@@ -148,17 +150,16 @@ public interface HttpService {
      */
     @POST("topics/{id}/replies.json")
     @FormUrlEncoded
-    <T> Observable<T> createTopicReply(@Path("id") int id, @Field("body") String body);
+    Observable<TopicReply> createTopicReply(@Path("id") int id, @Field("body") String body);
 
 
     /**
      * 获取回帖的详细内容
      * @param id
-     * @param <T>
      * @return
      */
     @GET("replies/{id}.json")
-    <T> Observable<T> getTopicReply(@Path("id") int id);
+    Observable<TopicReply> getTopicReply(@Path("id") int id);
 
 
     /**
@@ -170,7 +171,7 @@ public interface HttpService {
      */
     @POST("replies/{id}.json")
     @FormUrlEncoded
-    <T> Observable<T> updateTopicReply(@Path("id") int id, @Field("body") String body);
+    Observable<TopicReply> updateTopicReply(@Path("id") int id, @Field("body") String body);
 
 
     /**
@@ -180,7 +181,7 @@ public interface HttpService {
      * @return 状态
      */
     @DELETE("replies/{id}.json")
-    <T> Observable<T> deleteTopicReply(@Path("id") int id);
+    Observable<State> deleteTopicReply(@Path("id") int id);
 
 
     /**
@@ -191,7 +192,7 @@ public interface HttpService {
      */
     @POST("topics/{id}/ban.json")
     @FormUrlEncoded
-    <T> Observable<T> banTopic(@Path("id") int id);
+    Observable<State> banTopic(@Path("id") int id);
 
 
     //-----------News-----------------------------------------------
