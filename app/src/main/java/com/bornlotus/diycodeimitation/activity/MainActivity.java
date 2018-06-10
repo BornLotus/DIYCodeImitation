@@ -1,6 +1,7 @@
 package com.bornlotus.diycodeimitation.activity;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -13,18 +14,26 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.bornlotus.diycodeimitation.R;
-import com.bornlotus.diycodeimitation.activity.fragment.NewsFragment;
-import com.bornlotus.diycodeimitation.activity.fragment.SitesFragment;
-import com.bornlotus.diycodeimitation.activity.fragment.TopicsFragment;
+import com.bornlotus.diycodeimitation.activity.api.http.HttpServiceManager;
+import com.bornlotus.diycodeimitation.activity.api.module.topic.Topic;
+import com.bornlotus.diycodeimitation.activity.ui.NewsFragment;
+import com.bornlotus.diycodeimitation.activity.ui.SitesFragment;
+import com.bornlotus.diycodeimitation.activity.ui.TopicsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
 public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+
+    public static final String TAG = "MainActivity";
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
@@ -34,6 +43,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     private List<String> titles;
     private NavigationView navigationView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private TopicsFragment topicsFragment;
+    private NewsFragment newsFragment;
+    private SitesFragment sitesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +53,39 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         setContentView(R.layout.activity_main);
 
         initViews();
+        initData();
 
     }
 
-    private void initViews(){
+    private void initData() {
+        swipeRefreshLayout.setRefreshing(true);
+        HttpServiceManager.newInstance().getTopicList(null, 1, 1, 10,
+                new Observer<List<Topic>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        System.out.println("current thread is main thread? " +
+                                (Thread.currentThread() == Looper.getMainLooper().getThread()));
+                    }
+
+                    @Override
+                    public void onNext(List<Topic> topics) {
+                        topicsFragment.notifyDataChanged(topics);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private void initViews() {
         mDrawer = findViewById(R.id.drawerLayout);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -61,12 +102,16 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         initViewPager();
     }
 
-    private void initViewPager(){
+    private void initViewPager() {
         viewPager = findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(3);
         list = new ArrayList<>(3);
-        list.add(new TopicsFragment());
-        list.add(new NewsFragment());
-        list.add(new SitesFragment());
+        topicsFragment = new TopicsFragment();
+        newsFragment = new NewsFragment();
+        sitesFragment = new SitesFragment();
+        list.add(topicsFragment);
+        list.add(newsFragment);
+        list.add(sitesFragment);
         viewPager.setAdapter(adapter);
 
         tabLayout = findViewById(R.id.tabLayout);
@@ -89,8 +134,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             ab.setHomeButtonEnabled(true);
             ab.setDisplayHomeAsUpEnabled(true);
         }
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,mDrawer,
-                mToolbar, R.string.drawer_open,R.string.drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawer,
+                mToolbar, R.string.drawer_open, R.string.drawer_close);
         toggle.syncState();
         mDrawer.addDrawerListener(toggle);
     }
@@ -115,6 +160,36 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
     @Override
     public void onRefresh() {
-        //HttpServiceManager.newInstance().getTopicList("",0,0,0,null);
+        Log.e(TAG, "onRefresh: data loading...");
+        onRefreshData();
+    }
+
+    private void onRefreshData() {
+        topicsFragment.refreshPageIndex();
+        HttpServiceManager.newInstance().getTopicList(null, 1,
+                topicsFragment.getPageIndex() * topicsFragment.getPageCount(),
+                topicsFragment.getPageCount(),
+                new Observer<List<Topic>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Topic> topics) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        topicsFragment.notifyDataChanged(topics);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.e(TAG, "onComplete: is called");
+                    }
+                });
     }
 }

@@ -6,7 +6,7 @@ import com.bornlotus.diycodeimitation.activity.api.module.topic.State;
 import com.bornlotus.diycodeimitation.activity.api.module.topic.Topic;
 import com.bornlotus.diycodeimitation.activity.api.module.topic.TopicContent;
 import com.bornlotus.diycodeimitation.activity.api.module.topic.TopicReply;
-import com.bornlotus.diycodeimitation.activity.api.utils.Constant;
+import com.bornlotus.diycodeimitation.activity.utils.Constant;
 
 import java.util.List;
 

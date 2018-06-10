@@ -14,5 +14,6 @@
     <string name="tab_topics">Topics</string>
     <string name="tab_news">News</string>
     <string name="tab_sites">Sites</string>
+    <string name="str_dot">·</string>
 
 </resources>

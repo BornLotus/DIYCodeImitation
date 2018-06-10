@@ -1,4 +1,4 @@
-package com.bornlotus.diycodeimitation.activity.fragment;
+package com.bornlotus.diycodeimitation.activity.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

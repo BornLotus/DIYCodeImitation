@@ -1,4 +1,4 @@
-package com.bornlotus.diycodeimitation.activity.fragment;
+package com.bornlotus.diycodeimitation.activity.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bornlotus.diycodeimitation.R;
-import com.bornlotus.diycodeimitation.activity.adapter.NewsAdapter;
+import com.bornlotus.diycodeimitation.activity.ui.adapter.NewsAdapter;
 
 import java.util.List;
 
